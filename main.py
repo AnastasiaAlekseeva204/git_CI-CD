@@ -3,20 +3,24 @@ from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
 from pathlib import Path
 
+
 class Product(BaseModel):
     name: str
     price: float
     description: str
     created_at: str
 
+
 app = FastAPI(title="E-Shop-СI-CD")
 
 with open(Path(__file__).parent / "shop.json", "r", encoding="utf-8") as f:
     PRODUCTS = json.load(f)
 
+
 @app.get("/products")
 async def get_products():
     return PRODUCTS
+
 
 @app.get("/product/{pid}")
 async def get_product(pid: int):
@@ -33,6 +37,4 @@ async def health():
 @app.get("/search")
 async def search(q: str = Query(..., min_length=1)):
     """Поиск товаров по подстроке в названии (q). Регистр не учитывается."""
-    return [p for p in PRODUCTS
-        if q.lower() in p["name"].lower()
-    ]
+    return [p for p in PRODUCTS if q.lower() in p["name"].lower()]

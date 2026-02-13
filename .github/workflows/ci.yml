@@ -24,12 +24,15 @@ jobs:
       - run: |
           pip install --upgrade pip
           pip install fastapi pydantic uvicorn pytest httpx ruff
+          pip install black
       # --- Проверки ---
       - run: python -m py_compile main.py
       - run: python -c "import main; print('imported OK')"
       - name: Run tests
         run: |
          pytest -v test_main.py; ruff check . --fix
+      - name: Test black
+        run: black --check .
       - name: Uvicorn smoke test
         run: |
           uvicorn main:app --host 127.0.0.1 --port 8000 &

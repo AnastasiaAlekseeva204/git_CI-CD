@@ -3,11 +3,13 @@ from main import app
 
 client = TestClient(app)
 
+
 def test_health():
     """Проверка endpoint /health"""
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json()["status"] == "ok"
+
 
 def test_products():
     """Проверка endpoint /products"""
@@ -15,6 +17,7 @@ def test_products():
     assert response.status_code == 200
     assert isinstance(response.json(), list)
     assert len(response.json()) > 0
+
 
 def test_search():
     """проверка поиска по названию"""
