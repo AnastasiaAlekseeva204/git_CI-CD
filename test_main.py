@@ -15,3 +15,9 @@ def test_products():
     assert response.status_code == 200
     assert isinstance(response.json(), list)
     assert len(response.json()) > 0
+
+def test_search():
+    """проверка поиска по названию"""
+    response = client.get("/search?q=5090")
+    assert response.status_code == 200
+    assert len(response.json()) > 0
