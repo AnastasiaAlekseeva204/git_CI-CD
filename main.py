@@ -10,15 +10,14 @@ class Product(BaseModel):
     description: str
     created_at: str
 
-
-  app = FastAPI(title="E-Shop-СI-CD")
+app = FastAPI(title="E-Shop-СI-CD")
 
 with open(Path(__file__).parent / "shop.json", "r", encoding="utf-8") as f:
     PRODUCTS = json.load(f)
 
 @app.get("/products")
 async def get_products():
-    return PRODUCTS.
+    return PRODUCTS
 
 @app.get("/product/{pid}")
 async def get_product(pid: int):
