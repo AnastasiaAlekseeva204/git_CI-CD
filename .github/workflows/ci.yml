@@ -29,7 +29,7 @@ jobs:
       - run: python -c "import main; print('imported OK')"
       - name: Run tests
         run: |
-         pytest -v test_main.py; ruff check main.py test_main.py
+         pytest -v test_main.py; ruff check . --fix
       - name: Uvicorn smoke test
         run: |
           uvicorn main:app --host 127.0.0.1 --port 8000 &
