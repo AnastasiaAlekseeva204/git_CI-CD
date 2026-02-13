@@ -1,5 +1,5 @@
 import json, datetime
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
 from pathlib import Path
 
@@ -28,3 +28,11 @@ async def get_product(pid: int):
 @app.get("/health")
 async def health():
     return {"status": "ok", "products": len(PRODUCTS)}
+
+
+@app.get("/search")
+async def search(q: str = Query(..., min_length=1)):
+    """Поиск товаров по подстроке в названии (q). Регистр не учитывается."""
+    return [p for p in PRODUCTS
+        if q.lower() in p["name"].lower()
+    ]
