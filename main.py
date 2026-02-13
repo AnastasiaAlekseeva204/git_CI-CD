@@ -17,7 +17,15 @@ with open(Path(__file__).parent / "shop.json", "r", encoding="utf-8") as f:
     PRODUCTS = json.load(f)
 
 CART = [{"product": PRODUCTS[0], "quantity": 2, "amount": PRODUCTS[0]["price"] * 2}]
-ORDERS = [{"items": [{"product": PRODUCTS[1], "quantity": 1, "amount": PRODUCTS[1]["price"]}], "total": PRODUCTS[1]["price"], "created_at": datetime.datetime.now().isoformat()}]
+ORDERS = [
+    {
+        "items": [
+            {"product": PRODUCTS[1], "quantity": 1, "amount": PRODUCTS[1]["price"]}
+        ],
+        "total": PRODUCTS[1]["price"],
+        "created_at": datetime.datetime.now().isoformat(),
+    }
+]
 
 
 @app.get("/products")
