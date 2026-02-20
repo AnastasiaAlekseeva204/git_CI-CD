@@ -52,7 +52,7 @@ jobs:
       - name: Init PostgreSQL
         run: |
           docker run --rm --network host -e PGPASSWORD=postgres -v $PWD/scripts:/scripts postgres:18 \
-            psql -h 127.0.0.1 -U postgres -d postgres -f init_db.sql
+            psql -h 127.0.0.1 -U postgres -d postgres -f /scripts/init_db.sql
       # - name: Run tests
       #   run: |
       #    pytest -v test_main.py; ruff check . --fix
