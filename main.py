@@ -34,3 +34,15 @@ async def get_products():
             return [{**dict(r), "price": float(r["price"])} for r in cur.fetchall()]
     finally:
         conn.close()
+
+
+@app.get("/health")
+async def health():
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT COUNT(*) as count FROM video_cards")
+            count = cur.fetchone()["count"]
+        return {"status": "ok", "products": count}
+    finally:
+        conn.close()
