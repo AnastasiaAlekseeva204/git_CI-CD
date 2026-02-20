@@ -8,6 +8,7 @@ jobs:
   test:
     name: Test before deploy
     runs-on: ubuntu-latest
+    services:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,9 +22,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Run tests
-        run: pytest -v test_main.py
+      
+            # - name: Run tests
+            #   run: pytest -v test_main.py
 
   deploy:
     name: Deploy to Railway

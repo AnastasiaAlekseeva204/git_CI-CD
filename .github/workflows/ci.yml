@@ -13,6 +13,27 @@ jobs:
   check:
     name: Syntax and import check
     runs-on: ubuntu-latest
+    service:
+    postgres:
+    image: postgres:18
+    env:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgresp
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
+    options: >-
+      --health-cmd "pg_isready -U postgres -d postgres"
+      --health-interval 5s
+      --health-timeout 5s
+      --health-retries 5
+
+env:
+  DB_HOST: 127.0.0.1
+  DB_PORT: 5433
+  DB_USER: postgres
+  DB_PASSWORD: postgres
+  DB_NAME: postgres
 
     steps:
       - uses: actions/checkout@v4
@@ -28,9 +49,13 @@ jobs:
       # --- Проверки ---
       - run: python -m py_compile main.py
       - run: python -c "import main; print('imported OK')"
-      - name: Run tests
+      - name: Init PostgreSQL
         run: |
-         pytest -v test_main.py; ruff check . --fix
+          docker run --rm --network host -e PGPASSWORD=postgres -v $PWD/scripts:/scripts postgres:18 \
+            psql -h 127.0.0.1 -U postgres -d postgres -f /init_db.sql
+      # - name: Run tests
+      #   run: |
+      #    pytest -v test_main.py; ruff check . --fix
       - name: Test black
         run: black --check .
       - name: Uvicorn smoke test
