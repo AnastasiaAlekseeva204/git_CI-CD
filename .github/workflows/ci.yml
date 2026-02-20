@@ -13,42 +13,42 @@ jobs:
   check:
     name: Syntax and import check
     runs-on: ubuntu-latest
-    service:
-    postgres:
-    image: postgres:18
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
     env:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgresp
-      POSTGRES_DB: postgres
-    ports:
-      - 5432:5432
-    options: >-
-      --health-cmd "pg_isready -U postgres -d postgres"
-      --health-interval 5s
-      --health-timeout 5s
-      --health-retries 5
-
-env:
-  DB_HOST: 127.0.0.1
-  DB_PORT: 5433
-  DB_USER: postgres
-  DB_PASSWORD: postgres
-  DB_NAME: postgres
-
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: postgres
     steps:
       - uses: actions/checkout@v4
       # --- Python ---
       - uses: actions/setup-python@v4
         with:
           python-version: '3.13'
-      #- name: Install dependencies
-      - run: |
+      - name: Install dependencies
+        run: |
           pip install --upgrade pip
           pip install fastapi pydantic uvicorn pytest httpx ruff
           pip install black
       # --- Проверки ---
-      - run: python -m py_compile main.py
-      - run: python -c "import main; print('imported OK')"
+      - name: Check syntax
+        run: python -m py_compile main.py
+      - name: Import check
+        run: python -c "import main; print('imported OK')"
       - name: Init PostgreSQL
         run: |
           docker run --rm --network host -e PGPASSWORD=postgres -v $PWD/scripts:/scripts postgres:18 \
